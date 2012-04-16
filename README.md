@@ -1,3 +1,3 @@
-# Form Helper (temporary name)
+# Form Helper 
 
-jQuery plugin for adding helper text to a floating box while an HTML form is being filled out.
+FormHelper is a jQuery plugin for creating visual guides for web form completion. 
