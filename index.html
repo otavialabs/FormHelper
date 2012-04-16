@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form Helper Demo</title>
+  <link href="formhelper.css" media="all" rel="stylesheet" type="text/css"/>
+  <style type="text/css">
+    html, body {
+      background: none repeat scroll 0 0 transparent;
+      border: 0 none;
+      color: #606060;
+      font: 13px/1.5 'Helvetica Neue',Arial,'Liberation Sans',FreeSans,sans-serif;
+      margin: 0;
+      outline: 0 none;
+      padding: 0;
+      vertical-align: baseline;
+    }
+    a {
+      color: #0088cf;
+    }
+    h1, footer, #main-content {
+      text-align: center;
+    }
+    #my-form {
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Form Helper v0.1</h1>
+  <div id="main-content">
+    <form id="my-form">
+      <input name= "first-name" class="required" type="text" placeholder="What is your first name?">
+      <input name= "last-name" class="required" type="text" placeholder="What is your last name?">
+      <input name="website" type="url" placeholder="What is your website's URL?">
+      <input name="email" class="required" type="email" placeholder="What is your email?">
+      <input type="submit" value="Go">
+    </form>
+  </div>
+
+  <footer>
+    Created by (<a href="http://twitter.com/codingobviously">@codingobviously</a>)
+  </footer>
+<script src="jquery.js"></script>
+<script src="formhelper.jquery.js"></script>
+<script>
+  $('input[name]').formHelper();
+</script>
+</body>
+</html>
