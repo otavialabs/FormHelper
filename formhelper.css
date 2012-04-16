@@ -61,6 +61,11 @@
   background-color: #ff7853;
 }
 
+.incomplete:hover {
+  color: #ffffff;
+  background-color: #ffa3ad;
+}
+
 .complete {
   color: #0088cf;
 }
