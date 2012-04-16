@@ -1,0 +1,73 @@
+.helper-container {
+  color: #555;
+  padding: 10px;
+  position: fixed;
+  right: 20px;
+  top: 100px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  -moz-box-shadow: 0px 0px 4px #bababa;
+  -webkit-box-shadow: 0px 0px 4px #bababa;
+  box-shadow: 0px 0px 4px #bababa;
+}
+
+.helper-container:hover,
+.helper-container:active {
+  -moz-box-shadow: 0px 0px 6px #ff8833;
+  -webkit-box-shadow: 0px 0px 6px #ff8833;
+  box-shadow: 0px 0px 6px #ff8833;
+}
+
+.helper-container h2 {
+  padding: 0 10px;
+  text-align: center;
+}
+
+.helper {
+  color: #777777;
+  padding: 2px 10px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 2px 0;
+}
+
+.helper:hover {
+  color: #0088cf;
+  text-decoration: underline;
+}
+
+.helper:before {
+  content: "";
+  float: left;
+  height: 18px;
+  margin: 0 4px 0 0;
+  position: relative;
+  top: 0;
+  width: 18px;
+}
+
+.important {
+  color: #5a5a5a;
+  font-weight: bold;
+}
+
+.incomplete {
+  color: #ffffff;
+  background-color: #ff7853;
+}
+
+.complete {
+  color: #0088cf;
+}
+
+.complete:before {
+  background: url("formhelper-sprite.png") no-repeat scroll 0 0 transparent;
+}
+
+.status-icon {
+  display: inline-block;
+  width: 40px;
+}
