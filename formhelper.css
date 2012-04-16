@@ -34,7 +34,9 @@
   margin: 2px 0;
 }
 
-.helper:hover {
+.helper:hover,
+.helper-container .active {
+  background-color: #efefef;
   color: #0088cf;
   text-decoration: underline;
 }

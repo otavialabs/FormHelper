@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form Helper Test Suite</title>
+  <link rel="stylesheet" href="lib/qunit/qunit.css" type="text/css" media="screen">
+  <script type="text/javascript" src="../../jquery.js"></script>
+  <script type="text/javascript" src="lib/qunit/qunit.js"></script>
+
+  <script type="text/javascript" src="../../formhelper.jquery.js"></script>
+
+  <script type="text/javascript" src="core.js"></script>
+</head>
+<body>
+  <h1 id="qunit-header">Form Helper Test Suite</h1>
+  <h2 id="qunit-banner"></h2>
+  <div id="qunit-testrunner-toolbar"></div>
+  <h2 id="qunit-userAgent"></h2>
+  <ol id="qunit-tests"></ol>
+
+  <form id="test-form">
+    <input name= "first-name" class="required" type="text" placeholder="What is your first name?">
+    <input name= "last-name" class="required" type="text" placeholder="What is your last name?">
+    <input name="website" type="url" placeholder="What is your website's URL?">
+    <input name="email" class="required" type="email" placeholder="What is your email?">
+    <input type="submit" value="Go">
+  </form>
+
+</body>
+</html>
+
