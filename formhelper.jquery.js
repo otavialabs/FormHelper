@@ -1,46 +1,47 @@
 (function ($) {
 
-  jQuery.fn.formHelper = function(method) {
+  jQuery.fn.formHelper = function (method) {
 
-    methods = {
+    var methods = {
 
       init: function (options) {
 
         var settings = $.extend({
           helperHeader: '<h2>Fill out the form</h2>',
           helperContainerClass: 'helper-container',
-          isFieldImportant: function (el) { 
+          isFieldImportant: function (el) {
             return $(el).hasClass('required')
-          },
+          }
         }, options),
 
-        appendHelperContainerToBody = function () {
-          var helperContainer = createDivWithClass(settings.helperContainerClass);
-          $(helperContainer).append(settings.helperHeader);
-          $('body').append(helperContainer);
-        },
+          appendHelperContainerToBody = function () {
+            var helperContainer = createDivWithClass(settings.helperContainerClass);
+            $(helperContainer).append(settings.helperHeader);
+            $('body').append(helperContainer);
+          },
 
-        appendHelperToContainer = function (helperElement) {
-          $('.' + settings.helperContainerClass).append(helperElement);
-        },
-        
-        processElementStatus = function (el, helper) {
-          var $el = $(el),
-            fieldIsEmpty = $el.val().length == 0;
-          if (fieldIsEmpty) {
-            $(helper).addClass('incomplete').removeClass('complete');
-          } else {
-            $(helper).removeClass('incomplete').addClass('complete');
-          }
-        };
+          appendHelperToContainer = function (helperElement) {
+            $('.' + settings.helperContainerClass).append(helperElement);
+          },
+
+          processElementStatus = function (el, helper) {
+            var $el = $(el),
+              fieldIsEmpty = $el.val().length == 0;
+            if (fieldIsEmpty) {
+              $(helper).addClass('incomplete').removeClass('complete');
+            } else {
+              $(helper).removeClass('incomplete').addClass('complete');
+            }
+          },
+          $fields = $('input[name]', this);
 
         appendHelperContainerToBody();
 
-        this.each(function () {
+        $fields.each(function () {
           var $this = $(this), newHelper;
           if (settings.isFieldImportant(this)) {
             newHelper = createImportantHelperElement(this.name, this);
-            $this.blur(function (e) {
+            $this.blur(function () {
               processElementStatus(this, newHelper);
             });
             processElementStatus(this, newHelper);
@@ -60,8 +61,8 @@
     } else if (typeof method === 'object' || !method) {
       return methods.init.apply(this, arguments);
     } else {
-      $.error('Method ' +  method + ' does not exist on jQuery.formHelper');
-    }    
+      $.error('Method ' + method + ' does not exist on jQuery.formHelper');
+    }
 
     /* Helper functions */
 
@@ -74,7 +75,7 @@
     function createHelperElement(name, el) {
       var helperDiv = createDivWithClass('helper');
       $(helperDiv).text(name.replace('-', ' '));
-      $(helperDiv).click(function() {
+      $(helperDiv).click(function () {
         $(el).focus();
       });
       return helperDiv;
@@ -88,4 +89,4 @@
 
   }
 
-})(jQuery)
+})(jQuery);
