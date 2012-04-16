@@ -2,7 +2,7 @@
 
   jQuery.fn.formHelper = function (method) {
 
-    methods = {
+    var methods = {
 
       init: function (options) {
 
@@ -32,15 +32,16 @@
             } else {
               $(helper).removeClass('incomplete').addClass('complete');
             }
-          };
+          },
+          $fields = $('input[name]', this);
 
         appendHelperContainerToBody();
 
-        this.each(function () {
+        $fields.each(function () {
           var $this = $(this), newHelper;
           if (settings.isFieldImportant(this)) {
             newHelper = createImportantHelperElement(this.name, this);
-            $this.blur(function (e) {
+            $this.blur(function () {
               processElementStatus(this, newHelper);
             });
             processElementStatus(this, newHelper);
