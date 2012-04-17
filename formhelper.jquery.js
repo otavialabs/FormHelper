@@ -36,20 +36,12 @@
             var $field = $(this), newHelper;
             if (settings.isFieldImportant(this)) {
               newHelper = createImportantHelperElement(this.name, this);
-              $field.blur(function () {
-                processElementStatus(this, newHelper);
-              });
               processElementStatus(this, newHelper);
             } else {
               newHelper = createHelperElement(this.name, this);
             }
             $field.data('formHelper', {helper: newHelper});
-            $field.focus(function () {
-              $($(this).data('formHelper').helper).addClass('active');
-            });
-            $field.blur(function () {
-              $($(this).data('formHelper').helper).removeClass('active');
-            });
+            attachEventsToField(this);
             addHelper(newHelper, helperContainer);
 
           });
@@ -128,6 +120,36 @@
       $(helper).removeClass('complete').addClass('incomplete')
     }
 
+    function activateHelper(helper) {
+      $(helper).addClass('active')
+    }
+
+    function deactivateHelper(helper) {
+      $(helper).removeClass('active')
+    }
+
+    function attachEventsToField(field) {
+      var $field = $(field);
+      $field.focus(function () {
+        activateHelper(getHelper(this));
+      });
+      $field.blur(function () {
+        deactivateHelper(getHelper(this));
+        if (fieldIsImportant(this)) {
+          processElementStatus(this, getHelper(this))
+        }
+      });
+    }
+
+    /* Helper functions - Retrieval */
+
+    function getHelper(field) {
+      return $(field).data('formHelper').helper;
+    }
+
+    function fieldIsImportant(field) {
+      return $(getHelper(field)).hasClass('important');
+    }
   }
 
 })(jQuery);
