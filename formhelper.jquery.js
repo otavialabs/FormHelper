@@ -33,17 +33,16 @@
           $('body').append(helperContainer);
 
           $fields.each(function () {
-            var $field = $(this), newHelper;
+            var newHelper;
             if (settings.isFieldImportant(this)) {
               newHelper = createImportantHelperElement(this.name, this);
-              processElementStatus(this, newHelper);
             } else {
               newHelper = createHelperElement(this.name, this);
             }
-            $field.data('formHelper', {helper: newHelper});
+            linkFieldToHelper(this, newHelper);
+            processFieldStatus(this, newHelper);
             attachEventsToField(this);
             addHelper(newHelper, helperContainer);
-
           });
 
           $(this).data('formHelper', {
@@ -102,12 +101,12 @@
       $(helperContainerElement).append(helperElement);
     }
 
-    function processElementStatus(el, helper) {
+    function processFieldStatus(el, helper) {
       var $el = $(el),
         fieldIsInvalid = $el.val().length == 0 || (el.checkValidity && el.checkValidity() == false);
-      if (fieldIsInvalid) {
+      if (fieldIsInvalid && helperIsImportant(el)) {
         setHelperToNegative(helper);
-      } else {
+      } else if (helperIsImportant(el)) {
         setHelperToPositive(helper);
       }
     }
@@ -135,8 +134,8 @@
       });
       $field.blur(function () {
         deactivateHelper(getHelper(this));
-        if (fieldIsImportant(this)) {
-          processElementStatus(this, getHelper(this))
+        if (helperIsImportant(this)) {
+          processFieldStatus(this, getHelper(this))
         }
       });
     }
@@ -147,8 +146,12 @@
       return $(field).data('formHelper').helper;
     }
 
-    function fieldIsImportant(field) {
+    function helperIsImportant(field) {
       return $(getHelper(field)).hasClass('important');
+    }
+
+    function linkFieldToHelper(field, helper) {
+      $(field).data('formHelper', {helper: helper});
     }
   }
 
