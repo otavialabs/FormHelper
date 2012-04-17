@@ -32,30 +32,38 @@
 
           var $this = $(this),
             $fields = $('input[name]', this),
-            data = $this.data('formHelper');
+            data = $this.data('formHelper'),
+            helperContainer;
 
           // Return if plugin has already been initialized for this form
           if (data) {
             return;
           }
 
-          var helperContainer = createHelperContainer(settings);
+          helperContainer = createHelperContainer(settings);
 
           $(helperContainer).data('formHelper', {target: this});
 
           $('body').append(helperContainer);
 
           $fields.each(function () {
-            var $this = $(this), newHelper;
+            var $field = $(this), newHelper;
             if (settings.isFieldImportant(this)) {
               newHelper = createImportantHelperElement(this.name, this);
-              $this.blur(function () {
+              $field.blur(function () {
                 processElementStatus(this, newHelper);
               });
               processElementStatus(this, newHelper);
             } else {
               newHelper = createHelperElement(this.name, this);
             }
+            $field.data('formHelper', {helper: newHelper});
+            $field.focus(function () {
+              $($(this).data('formHelper').helper).addClass('active');
+            });
+            $field.blur(function () {
+              $($(this).data('formHelper').helper).removeClass('active');
+            });
             appendHelperToContainer(newHelper);
 
           });
