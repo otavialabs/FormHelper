@@ -12,43 +12,40 @@
           isFieldImportant: function (el) {
             return $(el).hasClass('required')
           }
-        }, options),
+        }, options);
 
-          appendHelperContainerToBody = function () {
-            var helperContainer = createDivWithClass(settings.helperContainerClass);
-            $(helperContainer).append(settings.helperHeader);
-            $('body').append(helperContainer);
-          },
+        return this.each(function () {
 
-          appendHelperToContainer = function (helperElement) {
-            $('.' + settings.helperContainerClass).append(helperElement);
-          },
+          var $this = $(this),
+            $fields = $('input[name]', this),
+            data = $this.data('formHelper'),
+            helperContainer;
 
-          processElementStatus = function (el, helper) {
-            var $el = $(el),
-              fieldIsEmpty = $el.val().length == 0;
-            if (fieldIsEmpty) {
-              $(helper).addClass('incomplete').removeClass('complete');
-            } else {
-              $(helper).removeClass('incomplete').addClass('complete');
-            }
-          },
-          $fields = $('input[name]', this);
-
-        appendHelperContainerToBody();
-
-        $fields.each(function () {
-          var $this = $(this), newHelper;
-          if (settings.isFieldImportant(this)) {
-            newHelper = createImportantHelperElement(this.name, this);
-            $this.blur(function () {
-              processElementStatus(this, newHelper);
-            });
-            processElementStatus(this, newHelper);
-          } else {
-            newHelper = createHelperElement(this.name, this);
+          // Return if plugin has already been initialized for this form
+          if (data) {
+            return;
           }
-          appendHelperToContainer(newHelper);
+
+          helperContainer = createHelperContainer(settings);
+
+          $(helperContainer).data('formHelper', {target: this});
+
+          $('body').append(helperContainer);
+
+          $fields.each(function () {
+            var newHelper = createHelper(settings, this);
+            linkFieldToHelper(this, newHelper);
+            processFieldStatus(this, newHelper);
+            attachEventsToField(this);
+            addHelper(newHelper, helperContainer);
+          });
+
+          $(this).data('formHelper', {
+            target: $this,
+            fields: $fields,
+            helperContainer: helperContainer
+          });
+
         });
 
       }
@@ -64,7 +61,7 @@
       $.error('Method ' + method + ' does not exist on jQuery.formHelper');
     }
 
-    /* Helper functions */
+    /* Helper functions - Creators */
 
     function createDivWithClass(className) {
       var div = document.createElement('div');
@@ -87,6 +84,80 @@
       return importantHelper;
     }
 
+    function createHelperContainer(settings) {
+      var helperContainer = createDivWithClass(settings.helperContainerClass);
+      $(helperContainer).append(settings.helperHeader);
+      return helperContainer;
+    }
+
+    function createHelper(settings, field) {
+      var newHelper;
+      if (settings.isFieldImportant(field)) {
+        newHelper = createImportantHelperElement(field.name, field);
+      } else {
+        newHelper = createHelperElement(field.name, field);
+      }
+      return newHelper;
+    }
+
+    /* Helper functions - Manipulators */
+
+    function addHelper(helperElement, helperContainerElement) {
+      $(helperContainerElement).append(helperElement);
+    }
+
+    function processFieldStatus(el, helper) {
+      var $el = $(el),
+        fieldIsInvalid = $el.val().length == 0 || (el.checkValidity && el.checkValidity() == false);
+      if (fieldIsInvalid && helperIsImportant(el)) {
+        setHelperToNegative(helper);
+      } else if (helperIsImportant(el)) {
+        setHelperToPositive(helper);
+      }
+    }
+
+    function setHelperToPositive(helper) {
+      $(helper).removeClass('incomplete').addClass('complete');
+    }
+
+    function setHelperToNegative(helper) {
+      $(helper).removeClass('complete').addClass('incomplete')
+    }
+
+    function activateHelper(helper) {
+      $(helper).addClass('active')
+    }
+
+    function deactivateHelper(helper) {
+      $(helper).removeClass('active')
+    }
+
+    function attachEventsToField(field) {
+      var $field = $(field);
+      $field.focus(function () {
+        activateHelper(getHelper(this));
+      });
+      $field.blur(function () {
+        deactivateHelper(getHelper(this));
+        if (helperIsImportant(this)) {
+          processFieldStatus(this, getHelper(this))
+        }
+      });
+    }
+
+    /* Helper functions - Retrieval */
+
+    function getHelper(field) {
+      return $(field).data('formHelper').helper;
+    }
+
+    function helperIsImportant(field) {
+      return $(getHelper(field)).hasClass('important');
+    }
+
+    function linkFieldToHelper(field, helper) {
+      $(field).data('formHelper', {helper: helper});
+    }
   }
 
 })(jQuery);
