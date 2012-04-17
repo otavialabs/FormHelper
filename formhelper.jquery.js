@@ -6,13 +6,7 @@
 
       init: function (options) {
 
-        var settings = $.extend({
-          helperHeader: '<h2>Fill out the form</h2>',
-          helperContainerClass: 'helper-container',
-          isFieldImportant: function (el) {
-            return $(el).hasClass('required')
-          }
-        }, options);
+        var config = $.extend(getDefaults(), options);
 
         return this.each(function () {
 
@@ -25,19 +19,13 @@
             return;
           }
 
-          helperContainer = createHelperContainer(settings);
+          helperContainer = createHelperContainer(config);
 
           setData(helperContainer, {target: this});
 
           appendToDOM(helperContainer);
 
-          $fields.each(function () {
-            var newHelper = createHelper(settings, this);
-            linkFieldToHelper(this, newHelper);
-            processFieldStatus(this, newHelper);
-            attachEventsToField(this);
-            addHelper(newHelper, helperContainer);
-          });
+          prepareFields(config, $fields, helperContainer);
 
           setData(this, createFormData(this, $fields, helperContainer));
 
@@ -81,15 +69,15 @@
       return importantHelper;
     }
 
-    function createHelperContainer(settings) {
-      var helperContainer = createDivWithClass(settings.helperContainerClass);
-      $(helperContainer).append(settings.helperHeader);
+    function createHelperContainer(config) {
+      var helperContainer = createDivWithClass(config.helperContainerClass);
+      $(helperContainer).append(config.helperHeader);
       return helperContainer;
     }
 
-    function createHelper(settings, field) {
+    function createHelper(config, field) {
       var newHelper;
-      if (settings.isFieldImportant(field)) {
+      if (config.isFieldImportant(field)) {
         newHelper = createImportantHelperElement(field.name, field);
       } else {
         newHelper = createHelperElement(field.name, field);
@@ -159,6 +147,16 @@
       $('body').append(el);
     }
 
+    function prepareFields(config, $fields, helperContainer) {
+      $fields.each(function () {
+        var newHelper = createHelper(config, this);
+        linkFieldToHelper(this, newHelper);
+        processFieldStatus(this, newHelper);
+        attachEventsToField(this);
+        addHelper(newHelper, helperContainer);
+      });
+    }
+
     /* Helper functions - Retrieval */
 
     function getHelper(field) {
@@ -179,6 +177,18 @@
 
     function getData(el) {
       return $(el).data('formHelper');
+    }
+
+    /* Helper functions - Setup */
+
+    function getDefaults() {
+      return {
+        helperHeader: '<h2>Fill out the form</h2>',
+        helperContainerClass: 'helper-container',
+        isFieldImportant: function (el) {
+          return $(el).hasClass('required')
+        }
+      };
     }
 
   }
