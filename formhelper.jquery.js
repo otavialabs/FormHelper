@@ -32,23 +32,41 @@
             } else {
               $(helper).removeClass('incomplete').addClass('complete');
             }
-          },
-          $fields = $('input[name]', this);
+          };
 
-        appendHelperContainerToBody();
+        return this.each(function () {
 
-        $fields.each(function () {
-          var $this = $(this), newHelper;
-          if (settings.isFieldImportant(this)) {
-            newHelper = createImportantHelperElement(this.name, this);
-            $this.blur(function () {
-              processElementStatus(this, newHelper);
-            });
-            processElementStatus(this, newHelper);
-          } else {
-            newHelper = createHelperElement(this.name, this);
+          var $this = $(this),
+            $fields = $('input[name]', this),
+            data = $this.data('formHelper');
+
+          // Return if plugin has already been initialized for this form
+          if (data) {
+            return;
           }
-          appendHelperToContainer(newHelper);
+
+          appendHelperContainerToBody();
+
+          $fields.each(function () {
+            var $this = $(this), newHelper;
+            if (settings.isFieldImportant(this)) {
+              newHelper = createImportantHelperElement(this.name, this);
+              $this.blur(function () {
+                processElementStatus(this, newHelper);
+              });
+              processElementStatus(this, newHelper);
+            } else {
+              newHelper = createHelperElement(this.name, this);
+            }
+            appendHelperToContainer(newHelper);
+
+          });
+
+          $(this).data('formHelper', {
+              target : $this,
+              fields : $fields
+          });
+
         });
 
       }
