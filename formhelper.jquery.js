@@ -16,9 +16,8 @@
 
         return this.each(function () {
 
-          var $this = $(this),
-            $fields = $('input[name]', this),
-            data = $this.data('formHelper'),
+          var $fields = getFields(this),
+            data = getData(this),
             helperContainer;
 
           // Return if plugin has already been initialized for this form
@@ -28,9 +27,9 @@
 
           helperContainer = createHelperContainer(settings);
 
-          $(helperContainer).data('formHelper', {target: this});
+          setData(helperContainer, {target: this});
 
-          $('body').append(helperContainer);
+          appendToDOM(helperContainer);
 
           $fields.each(function () {
             var newHelper = createHelper(settings, this);
@@ -40,16 +39,14 @@
             addHelper(newHelper, helperContainer);
           });
 
-          $(this).data('formHelper', {
-            target: $this,
-            fields: $fields,
-            helperContainer: helperContainer
-          });
+          setData(this, createFormData(this, $fields, helperContainer));
 
         });
 
       }
     };
+
+    /* Conventional plugin method call routing */
 
     if (methods[method]) {
       return methods[method].apply(
@@ -100,6 +97,14 @@
       return newHelper;
     }
 
+    function createFormData(el, $fields, helperContainer) {
+      return {
+        target: $(el),
+        fields: $fields,
+        helperContainer: helperContainer
+      };
+    }
+
     /* Helper functions - Manipulators */
 
     function addHelper(helperElement, helperContainerElement) {
@@ -145,6 +150,14 @@
       });
     }
 
+    function setData(el, data) {
+      $(el).data('formHelper', data);
+    }
+
+    function appendToDOM(el) {
+      $('body').append(el);
+    }
+
     /* Helper functions - Retrieval */
 
     function getHelper(field) {
@@ -158,6 +171,15 @@
     function linkFieldToHelper(field, helper) {
       $(field).data('formHelper', {helper: helper});
     }
+
+    function getFields(el) {
+      return $('input[name]', el);
+    }
+
+    function getData(el) {
+      return $(el).data('formHelper');
+    }
+
   }
 
 })(jQuery);
