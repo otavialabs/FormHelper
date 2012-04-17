@@ -33,12 +33,7 @@
           $('body').append(helperContainer);
 
           $fields.each(function () {
-            var newHelper;
-            if (settings.isFieldImportant(this)) {
-              newHelper = createImportantHelperElement(this.name, this);
-            } else {
-              newHelper = createHelperElement(this.name, this);
-            }
+            var newHelper = createHelper(settings, this);
             linkFieldToHelper(this, newHelper);
             processFieldStatus(this, newHelper);
             attachEventsToField(this);
@@ -93,6 +88,16 @@
       var helperContainer = createDivWithClass(settings.helperContainerClass);
       $(helperContainer).append(settings.helperHeader);
       return helperContainer;
+    }
+
+    function createHelper(settings, field) {
+      var newHelper;
+      if (settings.isFieldImportant(field)) {
+        newHelper = createImportantHelperElement(field.name, field);
+      } else {
+        newHelper = createHelperElement(field.name, field);
+      }
+      return newHelper;
     }
 
     /* Helper functions - Manipulators */
