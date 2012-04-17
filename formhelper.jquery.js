@@ -20,8 +20,8 @@
 
           processElementStatus = function (el, helper) {
             var $el = $(el),
-              fieldIsEmpty = $el.val().length == 0;
-            if (fieldIsEmpty) {
+              fieldIsInvalid = $el.val().length == 0 || (el.checkValidity && el.checkValidity() == false);
+            if (fieldIsInvalid) {
               $(helper).addClass('incomplete').removeClass('complete');
             } else {
               $(helper).removeClass('incomplete').addClass('complete');
