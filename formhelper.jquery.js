@@ -12,21 +12,7 @@
           isFieldImportant: function (el) {
             return $(el).hasClass('required')
           }
-        }, options),
-
-          appendHelperToContainer = function (helperElement) {
-            $('.' + settings.helperContainerClass).append(helperElement);
-          },
-
-          processElementStatus = function (el, helper) {
-            var $el = $(el),
-              fieldIsInvalid = $el.val().length == 0 || (el.checkValidity && el.checkValidity() == false);
-            if (fieldIsInvalid) {
-              $(helper).addClass('incomplete').removeClass('complete');
-            } else {
-              $(helper).removeClass('incomplete').addClass('complete');
-            }
-          };
+        }, options);
 
         return this.each(function () {
 
@@ -64,7 +50,7 @@
             $field.blur(function () {
               $($(this).data('formHelper').helper).removeClass('active');
             });
-            appendHelperToContainer(newHelper);
+            addHelper(newHelper, helperContainer);
 
           });
 
@@ -89,7 +75,7 @@
       $.error('Method ' + method + ' does not exist on jQuery.formHelper');
     }
 
-    /* Helper functions */
+    /* Helper functions - Creators */
 
     function createDivWithClass(className) {
       var div = document.createElement('div');
@@ -116,6 +102,30 @@
       var helperContainer = createDivWithClass(settings.helperContainerClass);
       $(helperContainer).append(settings.helperHeader);
       return helperContainer;
+    }
+
+    /* Helper functions - Manipulators */
+
+    function addHelper(helperElement, helperContainerElement) {
+      $(helperContainerElement).append(helperElement);
+    }
+
+    function processElementStatus(el, helper) {
+      var $el = $(el),
+        fieldIsInvalid = $el.val().length == 0 || (el.checkValidity && el.checkValidity() == false);
+      if (fieldIsInvalid) {
+        setHelperToNegative(helper);
+      } else {
+        setHelperToPositive(helper);
+      }
+    }
+
+    function setHelperToPositive(helper) {
+      $(helper).removeClass('incomplete').addClass('complete');
+    }
+
+    function setHelperToNegative(helper) {
+      $(helper).removeClass('complete').addClass('incomplete')
     }
 
   }
