@@ -14,12 +14,6 @@
           }
         }, options),
 
-          appendHelperContainerToBody = function () {
-            var helperContainer = createDivWithClass(settings.helperContainerClass);
-            $(helperContainer).append(settings.helperHeader);
-            $('body').append(helperContainer);
-          },
-
           appendHelperToContainer = function (helperElement) {
             $('.' + settings.helperContainerClass).append(helperElement);
           },
@@ -45,7 +39,11 @@
             return;
           }
 
-          appendHelperContainerToBody();
+          var helperContainer = createHelperContainer(settings);
+
+          $(helperContainer).data('formHelper', {target: this});
+
+          $('body').append(helperContainer);
 
           $fields.each(function () {
             var $this = $(this), newHelper;
@@ -63,8 +61,9 @@
           });
 
           $(this).data('formHelper', {
-              target : $this,
-              fields : $fields
+            target: $this,
+            fields: $fields,
+            helperContainer: helperContainer
           });
 
         });
@@ -103,6 +102,12 @@
       var importantHelper = createHelperElement(name, el);
       $(importantHelper).addClass('important');
       return importantHelper;
+    }
+
+    function createHelperContainer(settings) {
+      var helperContainer = createDivWithClass(settings.helperContainerClass);
+      $(helperContainer).append(settings.helperHeader);
+      return helperContainer;
     }
 
   }
