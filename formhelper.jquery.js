@@ -143,9 +143,10 @@
         activateHelper(getHelper(this));
       });
       $field.blur(function () {
-        deactivateHelper(getHelper(this));
+        var helper = getHelper(this);
+        deactivateHelper(helper);
         if (helperIsImportant(this)) {
-          processFieldStatus(this, getHelper(this))
+          processFieldStatus(this, helper)
         }
       });
     }
