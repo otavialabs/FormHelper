@@ -7,4 +7,12 @@ $(document).ready(function() {
     equal($('.helper-container h2').text(), 'Fill out the form', 'Helper container default header text');
   });
 
+  test('override default options', function() {
+    var overrides = {
+      helperHeader: 'My custom header'
+    };
+    $('#test-form').formHelper(overrides);
+    equal($('.helper-container h2').text(), 'My custom header', 'Override default header');
+  });
+
 });
